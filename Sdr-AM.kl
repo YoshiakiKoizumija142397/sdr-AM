@@ -1,0 +1,29 @@
+import kotlin.math.*
+
+// サンプルレートとその他のパラメータ
+val sampleRate = 1000.0
+val duration = 2.0
+val carrierFreq = 100.0
+val modulatingFreq = 5.0
+
+fun main() {
+    // AM信号の生成
+    val amSignal = generateAMSignal()
+
+    // AM信号の復調
+    val demodulatedSignal = demodulateAMSignal(amSignal)
+
+    // 結果の出力
+    println("AM信号: ${amSignal.joinToString(", ")}")
+    println("復調後の信号: ${demodulatedSignal.joinToString(", ")}")
+}
+
+fun generateAMSignal(): List<Double> {
+    val time = List((sampleRate * duration).toInt()) { it / sampleRate }
+    return time.map { (1 + sin(2 * Math.PI * modulatingFreq * it)) * sin(2 * Math.PI * carrierFreq * it) }
+}
+
+fun demodulateAMSignal(amSignal: List<Double>): List<Double> {
+    // 絶対値でエンベロープ検出
+    return amSignal.map { abs(it) }
+}
